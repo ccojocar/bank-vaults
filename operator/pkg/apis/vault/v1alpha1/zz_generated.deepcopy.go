@@ -223,7 +223,7 @@ func (in *VaultSpec) DeepCopyInto(out *VaultSpec) {
 			if val == nil {
 				(*out)[key] = nil
 			} else {
-				(*out)[key] = val
+				(*out)[key] = val.DeepCopyinterface{}()
 			}
 		}
 	}
@@ -234,7 +234,7 @@ func (in *VaultSpec) DeepCopyInto(out *VaultSpec) {
 			if val == nil {
 				(*out)[key] = nil
 			} else {
-				(*out)[key] = val
+				(*out)[key] = val.DeepCopyinterface{}()
 			}
 		}
 	}

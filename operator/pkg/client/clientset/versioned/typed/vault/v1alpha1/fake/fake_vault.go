@@ -46,7 +46,7 @@ func (c *FakeVaults) List(opts v1.ListOptions) (result *v1alpha1.VaultList, err 
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &v1alpha1.VaultList{}
+	list := &v1alpha1.VaultList{ListMeta: obj.(*v1alpha1.VaultList).ListMeta}
 	for _, item := range obj.(*v1alpha1.VaultList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
@@ -103,7 +103,7 @@ func (c *FakeVaults) DeleteCollection(options *v1.DeleteOptions, listOptions v1.
 // Patch applies the patch and returns the patched vault.
 func (c *FakeVaults) Patch(name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.Vault, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(vaultsResource, c.ns, name, data, subresources...), &v1alpha1.Vault{})
+		Invokes(testing.NewPatchSubresourceAction(vaultsResource, c.ns, name, pt, data, subresources...), &v1alpha1.Vault{})
 
 	if obj == nil {
 		return nil, err

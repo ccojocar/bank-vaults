@@ -4,7 +4,6 @@ package versioned
 
 import (
 	vaultv1alpha1 "github.com/banzaicloud/bank-vaults/operator/pkg/client/clientset/versioned/typed/vault/v1alpha1"
-	glog "github.com/golang/glog"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"
@@ -13,8 +12,6 @@ import (
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
 	VaultV1alpha1() vaultv1alpha1.VaultV1alpha1Interface
-	// Deprecated: please explicitly pick a version if possible.
-	Vault() vaultv1alpha1.VaultV1alpha1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one
@@ -26,12 +23,6 @@ type Clientset struct {
 
 // VaultV1alpha1 retrieves the VaultV1alpha1Client
 func (c *Clientset) VaultV1alpha1() vaultv1alpha1.VaultV1alpha1Interface {
-	return c.vaultV1alpha1
-}
-
-// Deprecated: Vault retrieves the default version of VaultClient.
-// Please explicitly pick a version.
-func (c *Clientset) Vault() vaultv1alpha1.VaultV1alpha1Interface {
 	return c.vaultV1alpha1
 }
 
@@ -58,7 +49,6 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 
 	cs.DiscoveryClient, err = discovery.NewDiscoveryClientForConfig(&configShallowCopy)
 	if err != nil {
-		glog.Errorf("failed to create the DiscoveryClient: %v", err)
 		return nil, err
 	}
 	return &cs, nil
