@@ -25,10 +25,9 @@ func NewSimpleClientset(objects ...runtime.Object) *Clientset {
 		}
 	}
 
-	cs := &Clientset{}
-	cs.discovery = &fakediscovery.FakeDiscovery{Fake: &cs.Fake}
-	cs.AddReactor("*", "*", testing.ObjectReaction(o))
-	cs.AddWatchReactor("*", func(action testing.Action) (handled bool, ret watch.Interface, err error) {
+	fakePtr := testing.Fake{}
+	fakePtr.AddReactor("*", "*", testing.ObjectReaction(o))
+	fakePtr.AddWatchReactor("*", func(action testing.Action) (handled bool, ret watch.Interface, err error) {
 		gvr := action.GetResource()
 		ns := action.GetNamespace()
 		watch, err := o.Watch(gvr, ns)
@@ -38,7 +37,7 @@ func NewSimpleClientset(objects ...runtime.Object) *Clientset {
 		return true, watch, nil
 	})
 
-	return cs
+	return &Clientset{fakePtr, &fakediscovery.FakeDiscovery{Fake: &fakePtr}}
 }
 
 // Clientset implements clientset.Interface. Meant to be embedded into a
@@ -57,5 +56,10 @@ var _ clientset.Interface = &Clientset{}
 
 // VaultV1alpha1 retrieves the VaultV1alpha1Client
 func (c *Clientset) VaultV1alpha1() vaultv1alpha1.VaultV1alpha1Interface {
+	return &fakevaultv1alpha1.FakeVaultV1alpha1{Fake: &c.Fake}
+}
+
+// Vault retrieves the VaultV1alpha1Client
+func (c *Clientset) Vault() vaultv1alpha1.VaultV1alpha1Interface {
 	return &fakevaultv1alpha1.FakeVaultV1alpha1{Fake: &c.Fake}
 }
