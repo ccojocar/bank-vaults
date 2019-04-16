@@ -12,8 +12,6 @@ import (
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
 	VaultV1alpha1() vaultv1alpha1.VaultV1alpha1Interface
-	// Deprecated: please explicitly pick a version if possible.
-	Vault() vaultv1alpha1.VaultV1alpha1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one
@@ -25,12 +23,6 @@ type Clientset struct {
 
 // VaultV1alpha1 retrieves the VaultV1alpha1Client
 func (c *Clientset) VaultV1alpha1() vaultv1alpha1.VaultV1alpha1Interface {
-	return c.vaultV1alpha1
-}
-
-// Deprecated: Vault retrieves the default version of VaultClient.
-// Please explicitly pick a version.
-func (c *Clientset) Vault() vaultv1alpha1.VaultV1alpha1Interface {
 	return c.vaultV1alpha1
 }
 

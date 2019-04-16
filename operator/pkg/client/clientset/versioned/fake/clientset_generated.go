@@ -59,8 +59,3 @@ var _ clientset.Interface = &Clientset{}
 func (c *Clientset) VaultV1alpha1() vaultv1alpha1.VaultV1alpha1Interface {
 	return &fakevaultv1alpha1.FakeVaultV1alpha1{Fake: &c.Fake}
 }
-
-// Vault retrieves the VaultV1alpha1Client
-func (c *Clientset) Vault() vaultv1alpha1.VaultV1alpha1Interface {
-	return &fakevaultv1alpha1.FakeVaultV1alpha1{Fake: &c.Fake}
-}
